@@ -1,0 +1,97 @@
+The point of this algorithm is to see what the statistics are for the monty hall problem.
+The monty hall problem is as follows: there are three doors, behind two of the doors there is a goat and behind the third is a car.
+You are asked to pick one of the doors without knowing what is behind it, then the host of the game (who knows what is behind what door) opens a door that he knows has a goat behind it.
+The host then asks if you would like to change the door you originally chose to the final unopened door or stick with the door you originally chose.
+This program is a simulation of a given amount of games to see what the likelihood of winning is based on whether you stick with your original door the whole time, or if switching doors gives you a statistical advantage.
+Define statistics 
+    constructor()
+        set gamesWithSameDoorWon to new array
+        set gamesWithSameDoorLost to new array
+        set gamesWithDoorChangeWon to new array 
+        set gamesWithDoorChangeLost to new array
+End Define
+Define Door
+    constructor(number, isCar)
+    set number to number
+    set isCar to isCar
+    set opened to false
+End Define
+Define game 
+    constructor()
+    set doors to an array
+    set doorPicked
+    set openedGoatDoor
+    set finalPick
+    set randomChoice
+    set won
+    Sequence setDoors 
+        set door1 to new Door(1, false, false)
+        set door2 to new Door(1, false, false)
+        set door3 to new Door(1, false, false)
+        set doors to array of [door1, door2, door3]
+        set carDoor to random number in doors
+        set carDoor property isCar to true
+    End Sequence
+    Sequence pickDoor1
+        set doorPicked to random from doors
+        return doorPicked
+    End Sequence
+    Sequence pickDoor2
+        for all the numbers in the doors array
+            set openedGoatDoor to the number 
+            if openedGoatDoor is not equal to doorpicked and openedGoatDoor propert isCar is not equal to  true
+                set openedGoatDoor property opened to true
+                return openedGoatDoor
+            End if
+        End loop    
+    End Sequence
+    Sequence pickFinalDoor
+        for all the numbers in the doors array
+            set finalPick to the number
+            if finalPick is not equal to doorPicked and finalPick is not equal to openedGoatDoor
+                return finalPick
+            end if
+        End loop
+    End Sequence
+    Sequence randomize
+        set doorOption to new array of [doorPicked, finalPick]
+        set randomChoice to random from doorOption
+        if randomChoice is equal to true
+            set won to true
+        else
+            set won to false
+        End if
+    End Sequence    
+    Sequence runGame
+        setDoors
+        pickDoor1
+        pickDoor2
+        pickFinalDoor
+        randomize
+    End Sequence
+End Define
+set numberOfGames to 10000
+set stat to new Statistics
+for all the numbers in numberOfGames
+    set game to new Game
+    game runGame
+     if game randomChoice is equal to  game.doorPicked and game won is equal to  true
+        push "1" to stat gamesWithSameDoorWon
+    else if game randomChoice is not equal to game doorPicked and game won is equal to true
+        push "1" to stat gamesWithDoorChangeWon
+    else if game randomChoice is equal to game doorPicked and game won is not equal to true
+        push "1" to stat gamesWithSameDoorLost
+    else
+        push "1" to stat gamesWithDoorChangeLost
+    End if
+End loop
+set lengthSameWon to length of stat gamesWithSameDoorWon
+set lengthSameLost to length of stat gamesWithSameDoorLost
+set lengthChangeWon to length of stat gamesWithDoorChangeWon
+set lengthChangeLost to length of stat gamesWithDoorChangeLost
+
+set percentWonSame to ((lengthSameWon divided by lengthSameWon) plus lengthSameLost) multiplied by 100
+set percentWonChange to ((lengthChangeWon divided by lengthChangeWon) plus lengthChangeLost) multiplied by 100
+    
+display percentWonSame and "% of games were won when not switching door"
+display percentWonChange and "% of games were won when switching door"
